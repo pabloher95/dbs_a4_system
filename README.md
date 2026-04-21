@@ -1,5 +1,6 @@
 # A Tale of Five Cities
 
+
 Monorepo for a multi-service weather monitoring system focused on five fixed cities:
 
 - New York City
