@@ -1,0 +1,17 @@
+{
+  "name": "a4-system",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev -w apps/web",
+    "dev:worker": "npm run dev -w @a4-system/worker",
+    "build:web": "npm run build -w apps/web",
+    "build:worker": "npm run build -w @a4-system/worker",
+    "lint:web": "npm run lint -w apps/web",
+    "typecheck:web": "npm run typecheck -w apps/web",
+    "typecheck:worker": "npm run typecheck -w @a4-system/worker"
+  }
+}
