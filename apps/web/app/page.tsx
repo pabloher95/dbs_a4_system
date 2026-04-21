@@ -31,16 +31,15 @@ export default async function HomePage() {
               <Link className="action-primary" href="/login">
                 Enter dashboard
               </Link>
-              <Link className="action-secondary" href="/dashboard">
-                Preview live view
-              </Link>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
             <div className="rounded-[24px] border border-storm/30 bg-storm/20 p-5">
               <div className="text-xs uppercase tracking-[0.24em] text-storm/80">City pulse</div>
               <div className="mt-3 font-display text-4xl text-storm">5m</div>
-              <p className="mt-2 text-sm leading-6 text-ink/70">A new reading every five minutes keeps each city's mood current.</p>
+              <p className="mt-2 text-sm leading-6 text-ink/70">
+                We check for updates every five minutes; source measurements usually advance about every fifteen.
+              </p>
             </div>
             <div className="metric-tile">
               <div className="text-xs uppercase tracking-[0.24em] text-ink/45">Tracked cities</div>
