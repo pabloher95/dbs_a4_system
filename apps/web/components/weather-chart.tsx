@@ -20,9 +20,17 @@ type Props = {
 };
 
 const CITY_COLORS = ["#22d3ee", "#fbbf24", "#a78bfa", "#34d399", "#f97316"];
+const CITY_TIMEZONES: Record<string, string> = {
+  "new-york-city": "America/New_York",
+  tokyo: "Asia/Tokyo",
+  "buenos-aires": "America/Argentina/Buenos_Aires",
+  "mexico-city": "America/Mexico_City",
+  berlin: "Europe/Berlin"
+};
 
 export function WeatherChart({ initialHistory }: Props) {
   const [history, setHistory] = useState(initialHistory);
+  const cityNameToSlug = new Map(history.map((point) => [point.city_name, point.city_slug]));
 
   useEffect(() => {
     setHistory(initialHistory);
@@ -74,7 +82,46 @@ export function WeatherChart({ initialHistory }: Props) {
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(34, 211, 238, 0.10)" />
               <XAxis dataKey="label" tickLine={false} axisLine={false} stroke="rgba(220, 232, 244, 0.40)" tick={{ fill: "rgba(220,232,244,0.60)" }} />
               <YAxis tickLine={false} axisLine={false} stroke="rgba(220, 232, 244, 0.40)" tick={{ fill: "rgba(220,232,244,0.60)" }} />
-              <Tooltip />
+              <Tooltip
+                content={({ active, payload, label }) => {
+                  if (!active || !payload || payload.length === 0) return null;
+                  const observedAt = String((payload[0].payload as { observedAt?: string }).observedAt ?? "");
+                  const observedAtDate = observedAt ? new Date(observedAt) : null;
+
+                  return (
+                    <div className="rounded-xl border border-storm/25 bg-[#0b1f3f]/95 px-3 py-2 text-xs text-ink shadow-xl">
+                      <div className="mb-2 uppercase tracking-[0.16em] text-ink/60">{label}</div>
+                      <div className="grid gap-1.5">
+                        {payload.map((entry) => {
+                          const cityName = String(entry.name ?? "");
+                          const citySlug = cityNameToSlug.get(cityName) ?? "";
+                          const timezone = CITY_TIMEZONES[citySlug];
+                          const localTime =
+                            observedAtDate && timezone
+                              ? new Intl.DateTimeFormat("en-US", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: false,
+                                  timeZone: timezone
+                                }).format(observedAtDate)
+                              : "--:--";
+
+                          return (
+                            <div key={cityName} className="flex items-center justify-between gap-3">
+                              <span className="font-semibold" style={{ color: String(entry.color ?? "#dbeafe") }}>
+                                {cityName}
+                              </span>
+                              <span className="text-ink/85">
+                                {Number(entry.value).toFixed(1)}°C at {localTime}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                }}
+              />
               <Legend />
               {cityNames.map((cityName, index) => (
                 <Line

@@ -1,3 +1,6 @@
+ "use client";
+
+import { useEffect, useState } from "react";
 import type { WeatherSnapshot } from "../lib/types";
 
 type Props = {
@@ -21,7 +24,17 @@ function formatTime(timeStr: string | null): string {
   return `${h12}:${mm}${suffix}`;
 }
 
-function DaylightArc({ sunriseHours, sunsetHours, isDay }: { sunriseHours: number | null; sunsetHours: number | null; isDay: boolean }) {
+function DaylightArc({
+  sunriseHours,
+  sunsetHours,
+  isDay,
+  currentHours
+}: {
+  sunriseHours: number | null;
+  sunsetHours: number | null;
+  isDay: boolean;
+  currentHours: number | null;
+}) {
   if (sunriseHours === null || sunsetHours === null) {
     return (
       <div className="h-1 w-full rounded-full bg-panel">
@@ -31,11 +44,7 @@ function DaylightArc({ sunriseHours, sunsetHours, isDay }: { sunriseHours: numbe
   }
 
   const daylightSpan = Math.max(sunsetHours - sunriseHours, 0.5);
-
-  const now = new Date();
-  const currentHours = now.getHours() + now.getMinutes() / 60;
-
-  const progress = Math.min(Math.max((currentHours - sunriseHours) / daylightSpan, 0), 1);
+  const progress = currentHours === null ? 0 : Math.min(Math.max((currentHours - sunriseHours) / daylightSpan, 0), 1);
   const progressPct = `${(progress * 100).toFixed(1)}%`;
 
   return (
@@ -54,10 +63,22 @@ function DaylightArc({ sunriseHours, sunsetHours, isDay }: { sunriseHours: numbe
 }
 
 export function GoldenHourPanel({ latestSnapshots }: Props) {
+  const [currentHours, setCurrentHours] = useState<number | null>(null);
   const cities = latestSnapshots.filter((s) => s.sunrise_local || s.sunset_local || s.is_day !== undefined);
 
+  useEffect(() => {
+    const updateCurrentHours = () => {
+      const now = new Date();
+      setCurrentHours(now.getHours() + now.getMinutes() / 60);
+    };
+
+    updateCurrentHours();
+    const interval = setInterval(updateCurrentHours, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="glass-panel terminal-panel px-6 py-6 xl:col-span-2">
+    <div className="glass-panel terminal-panel motion-card px-6 py-6 xl:col-span-2">
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
           <div className="text-xs uppercase tracking-[0.24em] text-storm/70">Golden hour</div>
@@ -82,7 +103,7 @@ export function GoldenHourPanel({ latestSnapshots }: Props) {
             return (
               <div
                 key={city.city_id}
-                className={`relative overflow-hidden rounded-[24px] border px-5 py-5 transition ${
+                className={`motion-tile relative overflow-hidden rounded-[24px] border px-5 py-5 transition ${
                   city.is_day
                     ? "border-storm/25 bg-[#091e3a]"
                     : "border-mist/20 bg-cloud/80"
@@ -130,6 +151,7 @@ export function GoldenHourPanel({ latestSnapshots }: Props) {
                     sunriseHours={sunriseHours}
                     sunsetHours={sunsetHours}
                     isDay={city.is_day}
+                    currentHours={currentHours}
                   />
                   {daylightHours && (
                     <div className="mt-2 text-xs text-ink/40">

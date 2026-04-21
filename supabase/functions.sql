@@ -1,3 +1,6 @@
+drop function if exists public.get_latest_weather_for_user();
+drop function if exists public.get_recent_weather_history_for_user(integer);
+
 create or replace function public.get_latest_weather_for_user()
 returns table (
   city_id uuid,

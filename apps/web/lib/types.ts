@@ -24,3 +24,17 @@ export type WeatherSnapshot = {
 };
 
 export type WeatherHistoryPoint = WeatherSnapshot;
+
+export type NowcastEvent = {
+  id: string;
+  city_id: string;
+  city_name: string;
+  city_slug: string;
+  event_type: string;
+  severity: "info" | "watch" | "warning";
+  title: string;
+  detail: string;
+  metric_value: number | null;
+  observed_at: string;
+  created_at: string;
+};

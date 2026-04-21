@@ -38,12 +38,20 @@ export function getWeatherCodeLabel(code: number) {
 export function buildTemperatureSeries(history: WeatherHistoryPoint[]) {
   const cityNames = Array.from(new Set(history.map((point) => point.city_name)));
   const byTime = new Map<string, Record<string, number | string>>();
+  const axisTimeFormatter = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "UTC"
+  });
 
   for (const point of history) {
     const timeKey = point.observed_at;
     const row = byTime.get(timeKey) ?? {
       observedAt: point.observed_at,
-      label: new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date(point.observed_at))
+      label: `${axisTimeFormatter.format(new Date(point.observed_at))} UTC`
     };
 
     row[point.city_name] = point.temperature_c;

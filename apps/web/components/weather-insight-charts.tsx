@@ -24,6 +24,26 @@ type Props = {
 const TEMPERATURE_COLORS = ["#22d3ee", "#0891b2", "#7dd3fc", "#fbbf24", "#f97316"];
 const CONDITION_COLORS = ["#22d3ee", "#a78bfa", "#34d399", "#fbbf24", "#f97316"];
 
+const tooltipStyle = {
+  backgroundColor: "rgba(9, 30, 58, 0.92)",
+  border: "1px solid rgba(34, 211, 238, 0.25)",
+  borderRadius: "14px",
+  color: "rgba(226, 239, 250, 0.96)",
+  boxShadow: "0 10px 24px rgba(2, 12, 27, 0.35)"
+};
+
+const tooltipLabelStyle = {
+  color: "rgba(226, 239, 250, 0.72)",
+  fontSize: "12px",
+  letterSpacing: "0.06em",
+  textTransform: "uppercase" as const
+};
+
+const tooltipItemStyle = {
+  color: "rgba(226, 239, 250, 0.96)",
+  fontWeight: 600
+};
+
 export function WeatherInsightCharts({ latestSnapshots, history }: Props) {
   const insightRows = buildInsightRows(latestSnapshots, history);
 
@@ -45,7 +65,7 @@ export function WeatherInsightCharts({ latestSnapshots, history }: Props) {
 
   return (
     <section className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
-      <div className="glass-panel terminal-panel px-6 py-6">
+      <div className="glass-panel terminal-panel motion-card px-6 py-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="text-xs uppercase tracking-[0.24em] text-ink/45">Ranked now</div>
@@ -71,7 +91,15 @@ export function WeatherInsightCharts({ latestSnapshots, history }: Props) {
                   stroke="rgba(220,232,244,0.40)"
                   tick={{ fill: "rgba(220,232,244,0.60)" }}
                 />
-                <Tooltip />
+                <Tooltip
+                  isAnimationActive={false}
+                  cursor={false}
+                  wrapperStyle={{ outline: "none", pointerEvents: "none" }}
+                  contentStyle={tooltipStyle}
+                  labelStyle={tooltipLabelStyle}
+                  itemStyle={tooltipItemStyle}
+                  formatter={(value: number) => [`${value.toFixed(1)}°C`, "Temperature"]}
+                />
                 <Bar dataKey="temperature" radius={[0, 14, 14, 0]}>
                   {temperatureRanking.map((entry, index) => (
                     <Cell key={`${entry.city}-${entry.temperature}`} fill={TEMPERATURE_COLORS[index % TEMPERATURE_COLORS.length]} />
@@ -82,7 +110,7 @@ export function WeatherInsightCharts({ latestSnapshots, history }: Props) {
           )}
         </div>
       </div>
-      <div className="glass-panel terminal-panel px-6 py-6">
+      <div className="glass-panel terminal-panel motion-card px-6 py-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="text-xs uppercase tracking-[0.24em] text-ink/45">Condition mix</div>
@@ -104,14 +132,21 @@ export function WeatherInsightCharts({ latestSnapshots, history }: Props) {
                       <Cell key={entry.name} fill={CONDITION_COLORS[index % CONDITION_COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip
+                    isAnimationActive={false}
+                    wrapperStyle={{ outline: "none", pointerEvents: "none" }}
+                    contentStyle={tooltipStyle}
+                    labelStyle={tooltipLabelStyle}
+                    itemStyle={tooltipItemStyle}
+                    formatter={(value: number) => [`${value} cities`, "Count"]}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             )}
           </div>
           <div className="grid gap-3">
             {conditionMix.map((entry, index) => (
-              <div key={entry.name} className="flex items-center justify-between rounded-[22px] border border-storm/15 bg-panel px-4 py-3">
+              <div key={entry.name} className="motion-tile flex items-center justify-between rounded-[22px] border border-storm/15 bg-panel px-4 py-3">
                 <div className="flex items-center gap-3">
                   <span
                     className="h-3 w-3 rounded-full"
@@ -119,7 +154,7 @@ export function WeatherInsightCharts({ latestSnapshots, history }: Props) {
                   />
                   <span className="text-sm font-semibold text-ink">{entry.name}</span>
                 </div>
-                <span className="text-sm text-ink/60">{entry.count} city{entry.count === 1 ? "" : "ies"}</span>
+                <span className="text-sm text-ink/60">{entry.count} {entry.count === 1 ? "city" : "cities"}</span>
               </div>
             ))}
           </div>

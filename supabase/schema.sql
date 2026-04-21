@@ -38,6 +38,18 @@ create table if not exists public.weather_snapshots (
   unique (city_id, observed_at)
 );
 
+create table if not exists public.nowcast_events (
+  id uuid primary key default gen_random_uuid(),
+  city_id uuid not null references public.cities(id) on delete cascade,
+  event_type text not null,
+  severity text not null check (severity in ('info', 'watch', 'warning')),
+  title text not null,
+  detail text not null,
+  metric_value numeric(7,2),
+  observed_at timestamptz not null,
+  created_at timestamptz not null default timezone('utc', now())
+);
+
 do $$
 begin
   if not exists (
@@ -49,12 +61,22 @@ begin
   ) then
     alter publication supabase_realtime add table public.weather_snapshots;
   end if;
+  if not exists (
+    select 1
+    from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'nowcast_events'
+  ) then
+    alter publication supabase_realtime add table public.nowcast_events;
+  end if;
 end
 $$;
 
 alter table public.cities enable row level security;
 alter table public.user_city_subscriptions enable row level security;
 alter table public.weather_snapshots enable row level security;
+alter table public.nowcast_events enable row level security;
 
 create policy "cities are readable by authenticated users"
 on public.cities
@@ -92,6 +114,31 @@ using (
       and ucs.user_id = auth.uid()
   )
 );
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'nowcast_events'
+      and policyname = 'users can read nowcast events for subscribed cities'
+  ) then
+    create policy "users can read nowcast events for subscribed cities"
+    on public.nowcast_events
+    for select
+    to authenticated
+    using (
+      exists (
+        select 1
+        from public.user_city_subscriptions ucs
+        where ucs.city_id = nowcast_events.city_id
+          and ucs.user_id = auth.uid()
+      )
+    );
+  end if;
+end
+$$;
 
 insert into public.cities (slug, name, country_code, latitude, longitude, timezone)
 values
