@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { createClient } from "../lib/supabase-browser";
+import { env } from "../lib/env";
 
 export function LoginForm() {
   const supabase = createClient();
@@ -17,7 +18,7 @@ export function LoginForm() {
     setMessage(null);
 
     startTransition(async () => {
-      const origin = window.location.origin;
+      const origin = env.siteUrl ?? window.location.origin;
       const { error: authError } = await supabase.auth.signInWithOtp({
         email: nextEmail,
         options: {
