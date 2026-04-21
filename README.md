@@ -1,6 +1,12 @@
-# a4_system
+# A Tale of Five Cities
 
-Monorepo for a multi-service weather monitoring system:
+Monorepo for a multi-service weather monitoring system focused on five fixed cities:
+
+- New York City
+- Tokyo
+- Buenos Aires
+- Mexico City
+- Berlin
 
 - `apps/worker`: Node.js polling worker for Open-Meteo, intended for Railway.
 - `apps/web`: Next.js frontend for Vercel, with Supabase auth and realtime updates.
@@ -9,6 +15,8 @@ Monorepo for a multi-service weather monitoring system:
 ## Architecture
 
 `Open-Meteo -> Railway worker -> Supabase Postgres + Realtime -> Next.js frontend on Vercel`
+
+`weather_snapshots.observed_at` is stored in UTC. The UI presents city-specific local context where relevant.
 
 ## Setup
 
@@ -26,13 +34,15 @@ Monorepo for a multi-service weather monitoring system:
 - Worker: `npm run dev:worker`
 
 The worker reads city coordinates from the `cities` table, polls Open-Meteo, and upserts into `weather_snapshots`.
-The frontend uses magic-link login, lets each user select cities, and subscribes to realtime inserts.
+The frontend uses magic-link login and automatically subscribes each user to all five seeded cities.
+Dashboard panels refresh live when new snapshots are inserted (without manual page refresh).
 The worker loads its local env vars from `apps/worker/.env`.
 
 ## Supabase notes
 
 - Add `public.weather_snapshots` to the `supabase_realtime` publication if your project does not already include it.
 - Use the same project URL for both `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_URL`.
+- `public.nowcast_events` may exist for future event-driven features; it is not currently displayed in the dashboard UI.
 
 ## Deployment
 
