@@ -28,8 +28,15 @@ type OpenMeteoCurrent = {
   is_day: number;
 };
 
+type OpenMeteoDaily = {
+  time: string[];
+  sunrise: string[];
+  sunset: string[];
+};
+
 type OpenMeteoResponse = {
   current: OpenMeteoCurrent;
+  daily: OpenMeteoDaily;
 };
 
 const requiredEnv = ["SUPABASE_URL", "SUPABASE_SECRET_KEY"] as const;
@@ -68,7 +75,9 @@ async function fetchWeatherForCity(city: City) {
     "current",
     "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,weather_code,is_day"
   );
+  url.searchParams.set("daily", "sunrise,sunset");
   url.searchParams.set("timezone", city.timezone);
+  url.searchParams.set("forecast_days", "1");
 
   const response = await fetch(url);
   if (!response.ok) {
@@ -79,8 +88,17 @@ async function fetchWeatherForCity(city: City) {
   return payload;
 }
 
+function extractTime(isoString: string | undefined): string | null {
+  if (!isoString) return null;
+  const parts = isoString.split("T");
+  return parts[1] ?? null;
+}
+
 async function writeSnapshot(city: City, payload: OpenMeteoResponse) {
   const current = payload.current;
+  const sunrise = extractTime(payload.daily?.sunrise?.[0]);
+  const sunset = extractTime(payload.daily?.sunset?.[0]);
+
   const { error } = await supabase.from("weather_snapshots").upsert(
     {
       city_id: city.id,
@@ -93,6 +111,8 @@ async function writeSnapshot(city: City, payload: OpenMeteoResponse) {
       wind_direction_deg: current.wind_direction_10m,
       weather_code: current.weather_code,
       is_day: Boolean(current.is_day),
+      sunrise_local: sunrise,
+      sunset_local: sunset,
       raw_payload: payload
     },
     {

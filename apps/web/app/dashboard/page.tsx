@@ -34,7 +34,7 @@ export default async function DashboardPage() {
             <div className="section-kicker">Forecast Bureau</div>
             <h1 className="mt-3 max-w-[9ch] font-display text-5xl leading-[0.92] md:text-7xl">Weather feed</h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-ink/70 md:text-lg">
-              Select the cities you want. Fresh worker inserts are translated into rankings, regime splits, and trend shifts through Supabase Realtime.
+              Pick your cities below. Rankings, conditions, and charts refresh on their own as new readings come in.
             </p>
           </div>
           <SignOutButton />

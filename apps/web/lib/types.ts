@@ -19,6 +19,8 @@ export type WeatherSnapshot = {
   wind_direction_deg: number;
   weather_code: number;
   is_day: boolean;
+  sunrise_local: string | null;
+  sunset_local: string | null;
 };
 
 export type WeatherHistoryPoint = WeatherSnapshot;

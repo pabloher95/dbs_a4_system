@@ -37,13 +37,13 @@ export function LoginForm() {
   return (
     <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
       <div className="glass-panel relative overflow-hidden px-6 py-8 md:px-8 md:py-10">
-        <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-frost/30 blur-3xl" />
+        <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-storm/20 blur-3xl" />
         <div className="section-kicker">Access</div>
         <h1 className="mt-3 max-w-[9ch] font-display text-5xl leading-[0.92] md:text-6xl">
           Login to the weather desk.
         </h1>
         <p className="mt-5 max-w-xl text-base leading-7 text-ink/70">
-          Use passwordless email auth. Inside, you can build a personal feed and watch live city comparisons update as new readings arrive.
+          No password needed — just your email. Once inside, pick the cities you care about and watch readings refresh on their own.
         </p>
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
           <div className="metric-tile">
@@ -54,7 +54,7 @@ export function LoginForm() {
             <div className="text-xs uppercase tracking-[0.24em] text-ink/45">Sync</div>
             <div className="mt-2 font-display text-3xl">Live</div>
           </div>
-          <div className="rounded-[24px] border border-storm/10 bg-signal/15 p-4">
+          <div className="rounded-[24px] border border-signal/20 bg-signal/10 p-4">
             <div className="text-xs uppercase tracking-[0.24em] text-ink/45">Scope</div>
             <div className="mt-2 font-display text-3xl">Yours</div>
           </div>
@@ -72,7 +72,7 @@ export function LoginForm() {
             placeholder="you@example.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            className="rounded-[20px] border border-storm/10 bg-white/85 px-5 py-4 text-base outline-none transition focus:border-storm/40 focus:ring-4 focus:ring-storm/10"
+            className="rounded-[20px] border border-storm/20 bg-panel px-5 py-4 text-base text-ink outline-none transition placeholder:text-ink/30 focus:border-storm/60 focus:ring-4 focus:ring-storm/15"
             required
           />
           </label>
@@ -80,9 +80,9 @@ export function LoginForm() {
             {pending ? "Sending..." : "Send Magic Link"}
           </button>
           {message ? (
-            <div className="rounded-[20px] border border-storm/15 bg-storm/10 px-4 py-3 text-sm text-storm">{message}</div>
+            <div className="rounded-[20px] border border-storm/30 bg-storm/10 px-4 py-3 text-sm text-storm">{message}</div>
           ) : null}
-          {error ? <div className="rounded-[20px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</div> : null}
+          {error ? <div className="rounded-[20px] border border-rose-500/30 bg-rose-900/30 px-4 py-3 text-sm text-rose-300">{error}</div> : null}
         </form>
       </div>
     </section>

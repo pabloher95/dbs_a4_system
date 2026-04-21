@@ -62,10 +62,10 @@ export function CitySelector({ cities, selectedCityIds, userId }: Props) {
           <div className="text-xs uppercase tracking-[0.24em] text-ink/45">Cities</div>
           <h2 className="mt-2 font-display text-4xl leading-none text-ink">Choose your feed</h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">
-            Feed changes now refresh the dashboard immediately, so new cities appear without waiting for the next worker insert.
+            Toggle any city to add or remove it. Changes apply instantly across all panels.
           </p>
         </div>
-        <div className="text-sm text-ink/55">{pending ? "Saving..." : "Realtime updates enabled"}</div>
+        <div className="text-sm text-ink/55">{pending ? "Saving..." : "Live"}</div>
       </div>
       <div className="mt-6 flex flex-wrap gap-3">
         {cities.map((city) => {
@@ -76,8 +76,8 @@ export function CitySelector({ cities, selectedCityIds, userId }: Props) {
               key={city.id}
               className={`inline-flex cursor-pointer items-center gap-3 rounded-full border px-4 py-3 text-sm font-semibold transition ${
                 checked
-                  ? "border-storm/15 bg-storm text-white shadow-lg shadow-storm/15"
-                  : "border-storm/10 bg-white/70 text-ink hover:bg-white"
+                  ? "border-storm/40 bg-storm text-sky shadow-lg shadow-storm/20"
+                  : "border-storm/20 bg-panel/70 text-ink hover:bg-panel"
               }`}
             >
               <input
@@ -85,7 +85,7 @@ export function CitySelector({ cities, selectedCityIds, userId }: Props) {
                 checked={checked}
                 onChange={(event) => onToggle(city.id, event.target.checked)}
                 disabled={pending}
-                className="h-4 w-4 accent-[#ffb35c]"
+                className="h-4 w-4 accent-storm"
               />
               <span>
                 {city.name} · {city.country_code}
@@ -95,7 +95,7 @@ export function CitySelector({ cities, selectedCityIds, userId }: Props) {
         })}
       </div>
       {errorMessage ? (
-        <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+        <div className="mt-4 rounded-2xl border border-rose-500/30 bg-rose-900/30 px-4 py-3 text-sm text-rose-300">
           Feed update failed: {errorMessage}
         </div>
       ) : null}

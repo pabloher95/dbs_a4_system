@@ -8,7 +8,7 @@
   }
 
   html {
-    color-scheme: light;
+    color-scheme: dark;
   }
 
   body {
@@ -25,7 +25,7 @@
   }
 
   ::selection {
-    @apply bg-signal/40 text-ink;
+    @apply bg-storm/30 text-ink;
   }
 }
 
@@ -35,7 +35,7 @@
   }
 
   .glass-panel {
-    @apply rounded-[30px] border border-storm/10 bg-cloud/80 shadow-card backdrop-blur-xl;
+    @apply rounded-[30px] border border-storm/15 bg-cloud/95 shadow-card backdrop-blur-xl;
   }
 
   .terminal-panel {
@@ -48,11 +48,11 @@
     inset: 0;
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.06) 0%,
-      rgba(255, 255, 255, 0) 12%,
-      rgba(33, 74, 104, 0.03) 50%,
-      rgba(255, 255, 255, 0) 88%,
-      rgba(255, 255, 255, 0.05) 100%
+      rgba(34, 211, 238, 0.03) 0%,
+      rgba(34, 211, 238, 0) 12%,
+      rgba(6, 13, 24, 0.06) 50%,
+      rgba(34, 211, 238, 0) 88%,
+      rgba(34, 211, 238, 0.02) 100%
     );
     background-size: 100% 14px;
     opacity: 0.7;
@@ -67,25 +67,25 @@
     content: "";
     position: absolute;
     inset: -35%;
-    background: conic-gradient(from 90deg, transparent 0deg, rgba(143, 196, 219, 0.18) 55deg, transparent 110deg);
+    background: conic-gradient(from 90deg, transparent 0deg, rgba(34, 211, 238, 0.12) 55deg, transparent 110deg);
     animation: sweep 10s linear infinite;
     pointer-events: none;
   }
 
   .section-kicker {
-    @apply text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-storm/65;
+    @apply text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-storm/70;
   }
 
   .action-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-storm px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-storm/90 disabled:cursor-not-allowed disabled:opacity-70;
+    @apply inline-flex items-center justify-center rounded-full bg-storm px-5 py-3 text-sm font-semibold text-sky transition hover:-translate-y-0.5 hover:bg-frost disabled:cursor-not-allowed disabled:opacity-70;
   }
 
   .action-secondary {
-    @apply inline-flex items-center justify-center rounded-full border border-storm/10 bg-white/70 px-5 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:bg-white;
+    @apply inline-flex items-center justify-center rounded-full border border-storm/20 bg-panel/70 px-5 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:bg-panel;
   }
 
   .metric-tile {
-    @apply rounded-[24px] border border-storm/10 bg-white/65 p-4;
+    @apply rounded-[24px] border border-storm/15 bg-panel p-4;
   }
 }
 
@@ -102,10 +102,10 @@
 @keyframes terminal-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 rgba(143, 196, 219, 0);
+    box-shadow: 0 0 0 rgba(34, 211, 238, 0);
   }
 
   50% {
-    box-shadow: 0 0 0 6px rgba(143, 196, 219, 0.08);
+    box-shadow: 0 0 0 6px rgba(34, 211, 238, 0.12);
   }
 }

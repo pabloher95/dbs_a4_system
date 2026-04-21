@@ -10,7 +10,10 @@ returns table (
   wind_speed_kph numeric,
   wind_direction_deg numeric,
   weather_code integer,
-  is_day boolean
+  is_day boolean,
+  precipitation_mm numeric,
+  sunrise_local text,
+  sunset_local text
 )
 language sql
 security definer
@@ -27,7 +30,10 @@ as $$
     ws.wind_speed_kph,
     ws.wind_direction_deg,
     ws.weather_code,
-    ws.is_day
+    ws.is_day,
+    ws.precipitation_mm,
+    ws.sunrise_local,
+    ws.sunset_local
   from public.cities c
   join public.user_city_subscriptions ucs on ucs.city_id = c.id
   join public.weather_snapshots ws on ws.city_id = c.id
@@ -49,7 +55,10 @@ returns table (
   wind_speed_kph numeric,
   wind_direction_deg numeric,
   weather_code integer,
-  is_day boolean
+  is_day boolean,
+  precipitation_mm numeric,
+  sunrise_local text,
+  sunset_local text
 )
 language sql
 security definer
@@ -68,6 +77,9 @@ as $$
       ws.wind_direction_deg,
       ws.weather_code,
       ws.is_day,
+      ws.precipitation_mm,
+      ws.sunrise_local,
+      ws.sunset_local,
       row_number() over (partition by c.id order by ws.observed_at desc) as row_num
     from public.cities c
     join public.user_city_subscriptions ucs on ucs.city_id = c.id
@@ -85,7 +97,10 @@ as $$
     wind_speed_kph,
     wind_direction_deg,
     weather_code,
-    is_day
+    is_day,
+    precipitation_mm,
+    sunrise_local,
+    sunset_local
   from ranked_history
   where row_num <= greatest(limit_per_city, 1)
   order by city_name, observed_at;

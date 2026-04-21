@@ -9,22 +9,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        sky: "#edf5fb",
-        cloud: "#f9fcff",
-        ink: "#16212b",
-        mist: "#dbe7f1",
-        storm: "#214a68",
-        tide: "#5b7c96",
-        frost: "#8fc4db",
-        signal: "#ffb35c",
-        ember: "#ff8a5b"
+        sky: "#060d18",
+        cloud: "#0d1b2e",
+        panel: "#112440",
+        ink: "#dce8f4",
+        mist: "#1e3456",
+        storm: "#22d3ee",
+        tide: "#0891b2",
+        frost: "#7dd3fc",
+        signal: "#fbbf24",
+        ember: "#f97316"
       },
       fontFamily: {
         display: ["Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Georgia", "serif"],
         body: ["Avenir Next", "Segoe UI", "Helvetica Neue", "Arial", "sans-serif"]
       },
       boxShadow: {
-        card: "0 28px 90px rgba(18, 34, 48, 0.12)"
+        card: "0 28px 90px rgba(0, 0, 0, 0.40)"
       }
     }
   },

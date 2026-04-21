@@ -30,6 +30,9 @@ create table if not exists public.weather_snapshots (
   wind_direction_deg numeric(5,2) not null,
   weather_code integer not null,
   is_day boolean not null,
+  precipitation_mm numeric(5,2),
+  sunrise_local text,
+  sunset_local text,
   raw_payload jsonb not null,
   created_at timestamptz not null default timezone('utc', now()),
   unique (city_id, observed_at)
@@ -104,3 +107,18 @@ set
   latitude = excluded.latitude,
   longitude = excluded.longitude,
   timezone = excluded.timezone;
+
+-- idempotent migrations for new columns (safe to re-run)
+do $$
+begin
+  if not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'weather_snapshots' and column_name = 'precipitation_mm') then
+    alter table public.weather_snapshots add column precipitation_mm numeric(5,2);
+  end if;
+  if not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'weather_snapshots' and column_name = 'sunrise_local') then
+    alter table public.weather_snapshots add column sunrise_local text;
+  end if;
+  if not exists (select 1 from information_schema.columns where table_schema = 'public' and table_name = 'weather_snapshots' and column_name = 'sunset_local') then
+    alter table public.weather_snapshots add column sunset_local text;
+  end if;
+end
+$$;
